@@ -58,6 +58,7 @@ __all__ = [
     "cu1",
     "cu2",
     "cu3",
+    "su4",
     "qubitunitary",
     "qubitunitaryfast",
     "qubitunitarystrict",
@@ -960,6 +961,157 @@ def cu3_matrix(params):
     return matrix.squeeze(0)
 
 
+def kron(a, b):
+    """Kronecker product of matrices a and b with leading batch dimensions.
+
+    Batch dimensions are broadcast. The number of them mush.
+    A part of the pylabyk library: numpytorch.py at https://github.com/yulkang/pylabyk
+
+    :type a: torch.Tensor
+    :type b: torch.Tensor
+    :rtype: torch.Tensor
+    """
+    siz1 = torch.Size(torch.tensor(a.shape[-2:]) * torch.tensor(b.shape[-2:]))
+    res = a.unsqueeze(-1).unsqueeze(-3) * b.unsqueeze(-2).unsqueeze(-4)
+    siz0 = res.shape[:-4]
+    return res.reshape(siz0 + siz1)
+
+
+def su4_matrix(params):
+    """Compute unitary matrix for SU(4) gate.
+
+    A general two-qubit unitary is parameterized by 15 angles.
+    We construct the full matrix using one- and two-qubit gates,
+    based on Fig 2 of
+    https://web.eecs.umich.edu/~imarkov/pubs/conf/spie04-2qubits.pdf
+
+    Args:
+        params (torch.Tensor): The rotation angles.
+
+    Returns:
+        torch.Tensor: The computed unitary matrix.
+    """
+    bsz = params.shape[0]
+    zero = torch.zeros((bsz,1))
+    one = torch.ones((bsz,1))
+
+    # rotation angle for first Rz
+    theta = params[:, 0].unsqueeze(dim=-1).type(C_DTYPE)
+
+    # rotation angle for Rx
+    phi = params[:, 1].unsqueeze(dim=-1).type(C_DTYPE)
+    cos_of_phi = torch.cos(phi / 2)
+    sin_of_phi = torch.sin(phi / 2)
+
+    # rotation angle for second Rz
+    lam = params[:, 2].unsqueeze(dim=-1).type(C_DTYPE)
+
+    # SU(2) angles for gate a
+    alpha1 = params[:, 3].unsqueeze(dim=-1).type(C_DTYPE)
+    alpha2 = params[:, 4].unsqueeze(dim=-1).type(C_DTYPE)
+    alpha3 = params[:, 5].unsqueeze(dim=-1).type(C_DTYPE)
+    cos_of_alpha1 = torch.cos(alpha1 / 2)
+    sin_of_alpha1 = torch.sin(alpha1 / 2)
+
+    # SU(2) angles for gate b
+    beta1 = params[:, 6].unsqueeze(dim=-1).type(C_DTYPE)
+    beta2 = params[:, 7].unsqueeze(dim=-1).type(C_DTYPE)
+    beta3 = params[:, 8].unsqueeze(dim=-1).type(C_DTYPE)
+    cos_of_beta1 = torch.cos(beta1 / 2)
+    sin_of_beta1 = torch.sin(beta1 / 2)
+
+    # SU(2) angles for gate c
+    gamma1 = params[:, 9].unsqueeze(dim=-1).type(C_DTYPE)
+    gamma2 = params[:, 10].unsqueeze(dim=-1).type(C_DTYPE)
+    gamma3 = params[:, 11].unsqueeze(dim=-1).type(C_DTYPE)
+    cos_of_gamma1 = torch.cos(gamma1 / 2)
+    sin_of_gamma1 = torch.sin(gamma1 / 2)
+
+    # SU(2) angles for gate d
+    delta1 = params[:, 12].unsqueeze(dim=-1).type(C_DTYPE)
+    delta2 = params[:, 13].unsqueeze(dim=-1).type(C_DTYPE)
+    delta3 = params[:, 14].unsqueeze(dim=-1).type(C_DTYPE)
+    cos_of_delta1 = torch.cos(delta1 / 2)
+    sin_of_delta1 = torch.sin(delta1 / 2)
+
+    # Construct all one-qubit gates needed
+    iden = torch.eye(2).repeat(bsz, 1, 1)
+
+    rz1 = torch.stack(
+        [
+            torch.cat([torch.exp(-1j * theta / 2), zero], dim=-1),
+            torch.cat([zero, torch.exp(1j * theta / 2)], dim=-1),
+        ],
+        dim=-2,
+    )
+
+    rz2 = torch.stack(
+        [
+            torch.cat([torch.exp(-1j * lam / 2), zero], dim=-1),
+            torch.cat([zero, torch.exp(1j * lam / 2)], dim=-1),
+        ],
+        dim=-2,
+    )
+
+    rx1 = torch.stack(
+        [
+            torch.cat([cos_of_phi, -1j * sin_of_phi], dim=-1),
+            torch.cat([-1j * sin_of_phi, cos_of_phi], dim=-1),
+        ],
+        dim=-2,
+    )
+
+    a_su2 = torch.stack(
+        [
+            torch.cat([cos_of_alpha1, -1 * torch.exp(1j * alpha3) * sin_of_alpha1], dim=-1),
+            torch.cat([torch.exp(1j * alpha2) * sin_of_alpha1, torch.exp(1j * (alpha2 + alpha3)) * cos_of_alpha1], dim=-1),
+        ],
+        dim=-2,
+    )
+
+    b_su2 = torch.stack(
+        [
+            torch.cat([cos_of_beta1, -1 * torch.exp(1j * beta3) * sin_of_beta1], dim=-1),
+            torch.cat([torch.exp(1j * beta2) * sin_of_beta1, torch.exp(1j * (beta2 + beta3)) * cos_of_beta1], dim=-1),
+        ],
+        dim=-2,
+    )
+
+    c_su2 = torch.stack(
+        [
+            torch.cat([cos_of_gamma1, -1 * torch.exp(1j * gamma3) * sin_of_gamma1], dim=-1),
+            torch.cat([torch.exp(1j * gamma2) * sin_of_gamma1, torch.exp(1j * (gamma2 + gamma3)) * cos_of_gamma1], dim=-1),
+        ],
+        dim=-2,
+    )
+
+    d_su2 = torch.stack(
+        [
+            torch.cat([cos_of_delta1, -1 * torch.exp(1j * delta3) * sin_of_delta1], dim=-1),
+            torch.cat([torch.exp(1j * delta2) * sin_of_delta1, torch.exp(1j * (delta2 + delta3)) * cos_of_delta1], dim=-1),
+        ],
+        dim=-2,
+    )
+
+    # Construct two-qubit CNOT
+    cnot = torch.stack(
+        [
+            torch.cat([one, zero, zero, zero], dim=-1),
+            torch.cat([zero, one, zero, zero], dim=-1),
+            torch.cat([zero, zero, zero, one], dim=-1),
+            torch.cat([zero, zero, one, zero], dim=-1),
+        ],
+        dim=-2,
+    ).type(C_DTYPE)
+
+    matrix = torch.bmm(cnot, kron(iden, rz1))
+    matrix = torch.bmm(kron(c_su2, d_su2), matrix)
+    matrix = torch.bmm(cnot, matrix)
+    matrix = torch.bmm(kron(rx1, rz2), matrix)
+    matrix = torch.bmm(cnot, matrix)
+    return torch.bmm(kron(a_su2, b_su2), matrix).squeeze(0)
+
+
 def qubitunitary_matrix(params):
     """Compute unitary matrix for Qubitunitary gate.
 
@@ -1190,6 +1342,7 @@ mat_dict = {
     "cu1": cu1_matrix,
     "cu2": cu2_matrix,
     "cu3": cu3_matrix,
+    "su4": su4_matrix,
     "qubitunitary": qubitunitary_matrix,
     "qubitunitaryfast": qubitunitaryfast_matrix,
     "qubitunitarystrict": qubitunitarystrict_matrix,
@@ -2891,6 +3044,53 @@ def cu3(
     )
 
 
+def su4(
+    q_device,
+    wires,
+    params=None,
+    n_wires=None,
+    static=False,
+    parent_graph=None,
+    inverse=False,
+    comp_method="bmm",
+):
+    """Perform the su4 gate.
+
+    Args:
+        q_device (tq.QuantumDevice): The QuantumDevice.
+        wires (Union[List[int], int]): Which qubit(s) to apply the gate.
+        params (torch.Tensor, optional): Parameters (if any) of the gate.
+            Default to None.
+        n_wires (int, optional): Number of qubits the gate is applied to.
+            Default to None.
+        static (bool, optional): Whether use static mode computation.
+            Default to False.
+        parent_graph (tq.QuantumGraph, optional): Parent QuantumGraph of
+            current operation. Default to None.
+        inverse (bool, optional): Whether inverse the gate. Default to False.
+        comp_method (bool, optional): Use 'bmm' or 'einsum' method to perform
+        matrix vector multiplication. Default to 'bmm'.
+
+    Returns:
+        None.
+
+    """
+    name = "su4"
+    mat = mat_dict[name]
+    gate_wrapper(
+        name=name,
+        mat=mat,
+        method=comp_method,
+        q_device=q_device,
+        wires=wires,
+        params=params,
+        n_wires=n_wires,
+        static=static,
+        parent_graph=parent_graph,
+        inverse=inverse,
+    )
+
+
 def qubitunitary(
     q_device,
     wires,
@@ -3289,6 +3489,7 @@ func_name_dict = {
     "cu2": cu2,
     "cu3": cu3,
     "cu": cu,
+    "su4": su4,
     "qubitunitary": qubitunitary,
     "qubitunitaryfast": qubitunitaryfast,
     "qubitunitarystrict": qubitunitarystrict,

@@ -36,12 +36,13 @@ _DECOMPOSER1Q = OneQubitEulerDecomposer("U3")
 class UnitaryGate(Gate):
     """Class for representing unitary gates"""
 
-    def __init__(self, data, label=None):
+    def __init__(self, data, label=None, name='unitary'):
         """Create a gate from a numeric unitary matrix.
 
         Args:
             data (matrix or Operator): unitary operator.
             label (str): unitary name for backend [Default: None].
+            name (str): Name for gate in printed QASM circuit.
 
         Raises:
             ExtensionError: if input data is not an N-qubit unitary operator.
@@ -70,7 +71,7 @@ class UnitaryGate(Gate):
         self._qasm_definition = None
         self._qasm_def_written = False
         # Store instruction params
-        super().__init__("unitary", num_qubits, [data], label=label)
+        super().__init__(name, num_qubits, [data], label=label)
 
     def __eq__(self, other):
         if not isinstance(other, UnitaryGate):

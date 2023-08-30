@@ -279,6 +279,12 @@ def append_fixed_gate(circ, func, params, wires, inverse):
         circ.u(*list(params), *wires)
     elif func == "cu3":
         circ.cu3(*list(params), *wires)
+    elif func == "su4":
+        from torchquantum.plugins.qiskit_unitary_gate import UnitaryGate
+
+        mat = np.array(tqf.su4_matrix(torch.Tensor([params])))
+        mat = switch_little_big_endian_matrix(mat)
+        circ.append(UnitaryGate(mat, name='SU(4)'), wires, [])
     elif (
         func == "qubitunitary"
         or func == "qubitunitaryfast"
