@@ -1,3 +1,27 @@
+"""
+MIT License
+
+Copyright (c) 2020-present TorchQuantum Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
@@ -5,7 +29,7 @@ import argparse
 
 import torchquantum as tq
 
-from torchquantum.datasets import MNIST
+from torchquantum.dataset import MNIST
 from torch.optim.lr_scheduler import CosineAnnealingLR
 
 import random
@@ -14,7 +38,7 @@ import numpy as np
 # need to make sure all the gates are RX RY RZ and parameters are 0, pi/2,
 # pi, 3pi/2 four types
 
-from torchquantum.layers import RXYZCXLayer0
+from torchquantum.layer import RXYZCXLayer0
 
 
 class QFCModel(tq.QuantumModule):
@@ -174,7 +198,7 @@ def main():
     # # run on Qiskit simulator and real Quantum Computers
     # try:
     #     from qiskit import IBMQ
-    #     from torchquantum.plugins import QiskitProcessor
+    #     from torchquantum.plugin import QiskitProcessor
     #
     #     # firstly perform simulate
     #     print(f"\nTest with Qiskit Simulator")
