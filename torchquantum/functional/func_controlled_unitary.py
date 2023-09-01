@@ -36,12 +36,12 @@ def controlled_unitary(
     """Create a controlled operation from a given operation.
 
     Args:
-        op: the operation
+        qdev: the quantum device
         c_wires: controlled wires, will only be a set such as 1, [2,3]
         t_wires: can be a list of list of wires, multiple sets
         [[1,2], [3,4]]
         params: the parameters of the unitary
-    
+
     Returns:
         None.
 
@@ -51,8 +51,6 @@ def controlled_unitary(
 
     c_wires = np.array(c_wires)
     t_wires = np.array(t_wires)
-    # self.n_t_wires = op.n_wires
-    # assert len(t_wires) == op.n_wires
 
     orig_u = params
 
