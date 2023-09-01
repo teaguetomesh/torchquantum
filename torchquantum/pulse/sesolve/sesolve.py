@@ -30,7 +30,6 @@ def sesolve(
     solver.run()
 
     psi_save, exp_save = solver.y_save, solver.exp_save
-
     return psi_save, exp_save
 
 
