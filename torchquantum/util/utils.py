@@ -936,9 +936,7 @@ def matrix_form(dm: torch.Tensor):
 def dm_to_mixture_of_state(dm: torch.Tensor, atol=1e-10):
     """
     Args:
-        q_device: The state vector to take the partial trace over.
-        keep_indices: Which indices to take the partial trace of the
-            state_vector on.
+        dm: The density matrix to decompose.
         atol: The tolerance for determining that a factored state is pure.
     """
     size = dm.size()
@@ -965,7 +963,7 @@ def dm_to_mixture_of_state(dm: torch.Tensor, atol=1e-10):
 
         eigvals, eigvecs = torch.linalg.eigh(dm)
         mixture = tuple(zip(eigvals, [vec.reshape([2] * dims) for vec in eigvecs.T]))
-        return tuple([(float(p[0]), p[1]) for p in mixture if p[0] > 1e-10])
+        return tuple([(float(p[0]), p[1]) for p in mixture if p[0] > atol])
 
 
 def partial_trace_test():
