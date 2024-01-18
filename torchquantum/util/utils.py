@@ -998,6 +998,12 @@ def partial_trace_test():
 
     print(mixture)
 
+def get_zero_projector() -> torch.Tensor:
+    return torch.tensor([[1, 0], [0, 0]], dtype=torch.complex64)
+
+def get_one_projector() -> torch.Tensor:
+    return torch.tensor([[0, 0], [0, 1]], dtype=torch.complex64)
+
 def pauli_string_to_matrix(pauli: str, device=torch.device('cpu')) -> torch.Tensor:
     mat_dict = {
         "paulix": torch.tensor([[0, 1], [1, 0]], dtype=C_DTYPE),
