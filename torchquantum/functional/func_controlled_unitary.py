@@ -94,7 +94,7 @@ def controlled_unitary(
     n_wires = n_c_wires + n_t_wires
 
     # compute the new unitary, then permute
-    unitary = torch.tensor(torch.zeros(2**n_wires, 2**n_wires, dtype=C_DTYPE))
+    unitary = torch.zeros(2**n_wires, 2**n_wires, dtype=C_DTYPE)
     for k in range(2**n_wires - 2**n_t_wires):
         unitary[k, k] = 1.0 + 0.0j
 
