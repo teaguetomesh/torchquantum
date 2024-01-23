@@ -2,7 +2,7 @@
 <img src="torchquantum_logo.jpg" alt="torchquantum Logo" width="450">
 </p>
 
-<h2><p align="center">A PyTorch Library for Quantum Simulation and Quantum Machine Learning</p></h2>
+<h2><p align="center">Quantum Computing in PyTorch</p></h2>
 <h3><p align="center">Faster, Scalable, Easy Debugging, Easy Deployment on Real Machine</p></h3>
 
 
@@ -16,9 +16,12 @@
     <a href="https://join.slack.com/t/torchquantum/shared_invite/zt-1ghuf283a-OtP4mCPJREd~367VX~TaQQ">
         <img alt="Chat @ Slack" src="https://img.shields.io/badge/slack-chat-2eb67d.svg?logo=slack">
     </a>
-    <a href="https://qmlsys.hanruiwang.me">
-        <img alt="Forum" src="https://img.shields.io/discourse/status?server=https%3A%2F%2Fqmlsys.hanruiwang.me%2F">
+    <a href="https://discord.gg/VTHZAB5E">
+        <img alt="Chat @ Discord" src="https://img.shields.io/badge/contact-me-blue?logo=discord&logoColor=white">
     </a>
+<!--     <a href="https://qmlsys.hanruiwang.me">
+        <img alt="Forum" src="https://img.shields.io/discourse/status?server=https%3A%2F%2Fqmlsys.hanruiwang.me%2F">
+    </a> -->
     <a href="https://qmlsys.mit.edu">
         <img alt="Website" src="https://img.shields.io/website?up_message=qmlsys&url=https%3A%2F%2Fqmlsys.mit.edu">
     </a>
@@ -47,7 +50,7 @@
 
 #### What it is doing
 
-Quantum simulation framework based on PyTorch. It supports statevector simulation and pulse simulation (coming soon) on GPUs. It can scale up to the simulation of 30+ qubits with multiple GPUs.
+Simulate quantum computations on classical hardware using PyTorch. It supports statevector simulation and pulse simulation on GPUs. It can scale up to the simulation of 30+ qubits with multiple GPUs.
 #### Who will benefit
 
 Researchers on quantum algorithm design, parameterized quantum circuit training, quantum optimal control, quantum machine learning, quantum neural networks.
@@ -56,10 +59,10 @@ Researchers on quantum algorithm design, parameterized quantum circuit training,
 Dynamic computation graph, automatic gradient computation, fast GPU support, batch model tersorized processing.
 
 ## News
-
+- Check the [dev branch](https://github.com/mit-han-lab/torchquantum/tree/dev) for new latest features on quantum layers and quantum algorithms.
 - v0.1.7 Available!
 - Join our [Slack](https://join.slack.com/t/torchquantum/shared_invite/zt-1ghuf283a-OtP4mCPJREd~367VX~TaQQ) for real time support!
-- Welcome to contribute! Please contact us or post in the [forum](https://qmlsys.hanruiwang.me) if you want to have new examples implemented by TorchQuantum or any other questions.
+- Welcome to contribute! Please contact us or post in the Github Issues if you want to have new examples implemented by TorchQuantum or any other questions.
 - Qmlsys website goes online: [qmlsys.mit.edu](https://qmlsys.mit.edu) and [torchquantum.org](https://torchquantum.org)
 
 ## Features
@@ -165,11 +168,11 @@ print(tq.measure(x, n_shots=2048))
 
 We also prepare many example and tutorials using TorchQuantum.
 
-For **beginning level**, you may check [QNN for MNIST](examples/simple_mnist), [Quantum Convolution (Quanvolution)](examples/quanvolution) and [Quantum Kernel Method](examples/quantum_kernel_method), and [Quantum Regression](examples/regression).
+For **beginning level**, you may check [QNN for MNIST](examples/mnist), [Quantum Convolution (Quanvolution)](examples/quanvolution) and [Quantum Kernel Method](examples/quantum_kernel_method), and [Quantum Regression](examples/regression).
 
 For **intermediate level**, you may check [Amplitude Encoding for MNIST](examples/amplitude_encoding_mnist), [Clifford gate QNN](examples/clifford_qnn), [Save and Load QNN models](examples/save_load_example), [PauliSum Operation](examples/PauliSumOp), [How to convert tq to Qiskit](examples/converter_tq_qiskit).
 
-For **expert**, you may check [Parameter Shift on-chip Training](examples/param_shift_onchip_training), [VQA Gradient Pruning](examples/gradient_pruning), [VQE](examples/simple_vqe),  [VQA for State Prepration](examples/train_state_prep), [QAOA (Quantum Approximate Optimization Algorithm)](examples/qaoa).
+For **expert**, you may check [Parameter Shift on-chip Training](examples/param_shift_onchip_training), [VQA Gradient Pruning](examples/gradient_pruning), [VQE](examples/vqe),  [VQA for State Prepration](examples/train_state_prep), [QAOA (Quantum Approximate Optimization Algorithm)](examples/qaoa).
 
 
 ## Usage
@@ -238,8 +241,8 @@ Train a quantum circuit to perform VQE task.
 Quito quantum computer as in [simple_vqe.py](./examples/simple_vqe/simple_vqe.py)
 script:
 ```python
-cd examples/simple_vqe
-python simple_vqe.py
+cd examples/vqe
+python vqe.py
 ```
 
 ## MNIST Example
@@ -248,8 +251,8 @@ Train a quantum circuit to perform MNIST classification task and deploy on the r
 Quito quantum computer as in [mnist_example.py](./examples/simple_mnist/mnist_example_no_binding.py)
 script:
 ```python
-cd examples/simple_mnist
-python mnist_example.py
+cd examples/mnist
+python mnist.py
 ```
 
 ## Files
