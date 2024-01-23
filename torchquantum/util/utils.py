@@ -998,11 +998,14 @@ def partial_trace_test():
 
     print(mixture)
 
-def get_zero_projector() -> torch.Tensor:
-    return torch.tensor([[1, 0], [0, 0]], dtype=torch.complex64)
-
-def get_one_projector() -> torch.Tensor:
-    return torch.tensor([[0, 0], [0, 1]], dtype=torch.complex64)
+def get_qubit_projector(state: int = 0, bsz: int = 1) -> torch.Tensor:
+    """Return a one-qubit projector onto the state with given batch size"""
+    if state == 0:
+        return torch.tensor([[1, 0], [0, 0]], dtype=C_DTYPE).unsqueeze(0).repeat(bsz, 1, 1)
+    elif state == 1:
+        return torch.tensor([[0, 0], [0, 1]], dtype=C_DTYPE).unsqueeze(0).repeat(bsz, 1, 1)
+    else:
+        raise Exception(f"Unknown state: {state}")
 
 def pauli_string_to_matrix(pauli: str, device=torch.device('cpu')) -> torch.Tensor:
     mat_dict = {
