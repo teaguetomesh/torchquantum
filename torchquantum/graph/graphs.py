@@ -30,7 +30,7 @@ import functools
 import numpy as np
 
 from torchquantum.macro import C_DTYPE, ABC, ABC_ARRAY
-from torchpack.utils.logging import logger
+#from torchpack.utils.logging import logger
 
 
 def encode_w(wires):

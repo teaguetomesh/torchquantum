@@ -23,18 +23,18 @@ SOFTWARE.
 """
 
 import copy
-from typing import Dict, Iterable, List, TYPE_CHECKING
+from typing import Dict, Iterable, List, Union, TYPE_CHECKING
 
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from opt_einsum import contract
-from qiskit import IBMQ
-from qiskit.exceptions import QiskitError
-from qiskit.providers.aer.noise.device.parameters import gate_error_values
-from torchpack.utils.config import Config
-from torchpack.utils.logging import logger
+#from qiskit import IBMQ
+#from qiskit.exceptions import QiskitError
+#from qiskit.providers.aer.noise.device.parameters import gate_error_values
+#from torchpack.utils.config import Config
+#from torchpack.utils.logging import logger
 
 import torchquantum as tq
 from torchquantum.macro import C_DTYPE
@@ -628,7 +628,7 @@ def get_v_c_reg_mapping(circ):
     return mapping2
 
 
-def get_cared_configs(conf, mode) -> Config:
+def get_cared_configs(conf, mode):
     """
         Get the relevant configurations based on the mode.
 
@@ -998,12 +998,16 @@ def partial_trace_test():
 
     print(mixture)
 
-def get_qubit_projector(state: int = 0, bsz: int = 1) -> torch.Tensor:
+def get_qubit_projector(
+        state: int = 0,
+        bsz: int = 1,
+        device: Union[torch.device, str] = "cpu",
+    ) -> torch.Tensor:
     """Return a one-qubit projector onto the state with given batch size"""
     if state == 0:
-        return torch.tensor([[1, 0], [0, 0]], dtype=C_DTYPE).unsqueeze(0).repeat(bsz, 1, 1)
+        return torch.tensor([[1, 0], [0, 0]], dtype=C_DTYPE, device=device).unsqueeze(0).repeat(bsz, 1, 1)
     elif state == 1:
-        return torch.tensor([[0, 0], [0, 1]], dtype=C_DTYPE).unsqueeze(0).repeat(bsz, 1, 1)
+        return torch.tensor([[0, 0], [0, 1]], dtype=C_DTYPE, device=device).unsqueeze(0).repeat(bsz, 1, 1)
     else:
         raise Exception(f"Unknown state: {state}")
 

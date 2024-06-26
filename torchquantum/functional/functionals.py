@@ -29,7 +29,7 @@ import numpy as np
 from typing import Callable, Union, Optional, List, Dict, TYPE_CHECKING
 from ..macro import C_DTYPE, F_DTYPE, ABC, ABC_ARRAY, INV_SQRT2
 from ..util.utils import pauli_eigs, diag
-from torchpack.utils.logging import logger
+#from torchpack.utils.logging import logger
 from torchquantum.util import normalize_statevector
 
 if TYPE_CHECKING:
@@ -1199,8 +1199,8 @@ def su4_matrix(params):
         torch.Tensor: The computed unitary matrix.
     """
     bsz = params.shape[0]
-    zero = torch.zeros((bsz,1))
-    one = torch.ones((bsz,1))
+    zero = torch.zeros((bsz,1), device=params.device)
+    one = torch.ones((bsz,1), device=params.device)
 
     # rotation angle for first Rz
     theta = params[:, 0].unsqueeze(dim=-1).type(C_DTYPE)
@@ -1242,7 +1242,7 @@ def su4_matrix(params):
     sin_of_delta1 = torch.sin(delta1 / 2)
 
     # Construct all one-qubit gates needed
-    iden = torch.eye(2).repeat(bsz, 1, 1)
+    iden = torch.eye(2, device=params.device).repeat(bsz, 1, 1)
 
     rz1 = torch.stack(
         [

@@ -33,7 +33,7 @@ from torchquantum.functional import mat_dict
 from torchquantum.util.quantization.clifford_quantization import CliffordQuantizer
 from abc import ABCMeta
 from ..macro import C_DTYPE, F_DTYPE
-from torchpack.utils.logging import logger
+#from torchpack.utils.logging import logger
 from typing import Iterable, Union, List
 
 __all__ = [
@@ -409,10 +409,10 @@ class Operator(tq.QuantumModule):
             else:
                 self.func(q_device, self.wires, n_wires=self.n_wires, inverse=self.inverse)  # type: ignore
         else:
-            if isinstance(self.noise_model_tq, tq.NoiseModelTQPhase):
-                params = self.noise_model_tq.add_noise(self.params)
-            else:
-                params = self.params
+            #if isinstance(self.noise_model_tq, tq.NoiseModelTQPhase):
+            #    params = self.noise_model_tq.add_noise(self.params)
+            #else:
+            params = self.params
 
             if self.clifford_quantization:
                 params = CliffordQuantizer.quantize_sse(params)

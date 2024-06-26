@@ -28,7 +28,7 @@ import pathos.multiprocessing as multiprocessing
 import itertools
 
 from qiskit import Aer, execute, IBMQ, transpile, QuantumCircuit
-from qiskit.providers.aer.noise import NoiseModel
+#from qiskit.providers.aer.noise import NoiseModel
 from qiskit.tools.monitor import job_monitor
 from qiskit.exceptions import QiskitError
 from .qiskit_plugin import (
@@ -44,7 +44,7 @@ from torchquantum.util import (
 )
 from .qiskit_macros import IBMQ_NAMES
 from tqdm import tqdm
-from torchpack.utils.logging import logger
+#from torchpack.utils.logging import logger
 from qiskit.transpiler import PassManager
 import numpy as np
 import datetime
